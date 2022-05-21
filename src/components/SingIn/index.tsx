@@ -19,8 +19,7 @@ const SignIn: React.FC<IUser> = ({ setUser }) => {
     const signInWithGoogle = () => {
         const provider = new GoogleAuthProvider();
         const auth = getAuth();
-        signInWithPopup(auth, provider);
-        setUser(auth.currentUser);
+        signInWithPopup(auth, provider).then((result) => setUser(result.user));
     };
 
     return (
