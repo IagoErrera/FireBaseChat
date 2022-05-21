@@ -1,13 +1,17 @@
-import Test from 'components/TestComponent';
+import { useState } from 'react';
+import { User } from 'firebase/auth';
+
+import ChatRoom from 'components/ChatRoom';
+import SignIn from 'components/SingIn';
+
 import * as S from './styles';
 
-const HomeTemplate = () => (
-    <S.Container>
-        <S.Title>
-            Esse template foi criado pela equipe de Research 21.1 para projetos
-            internos da Polijunior.
-        </S.Title>
-        <Test title="Esse componente é um teste" />
-    </S.Container>
-);
+const HomeTemplate = () => {
+    const [user, setUser] = useState(null as User | null);
+    return (
+        <S.Container>
+            {user ? <ChatRoom user={user} /> : <SignIn setUser={setUser} />}
+        </S.Container>
+    );
+};
 export default HomeTemplate;
