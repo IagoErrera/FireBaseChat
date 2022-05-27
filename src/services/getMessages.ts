@@ -4,7 +4,8 @@ import {
     orderBy,
     query,
     getDocs,
-    Timestamp
+    Timestamp,
+    where
 } from 'firebase/firestore';
 
 import { db } from '../firebase';
@@ -20,10 +21,15 @@ interface IMessage {
     id: string;
 }
 
-export const getMessages = async () => {
+export const getMessages = async (chatId: string) => {
     const messagesRef = collection(db, 'message');
 
-    const messagesQuery = query(messagesRef, limit(100), orderBy('createdAt'));
+    const messagesQuery = query(
+        messagesRef,
+        limit(100),
+        orderBy('createdAt'),
+        where('chatId', '==', chatId)
+    );
 
     const querySnapshot = await getDocs(messagesQuery);
 

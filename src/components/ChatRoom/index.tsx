@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 
 import { sendMessage } from 'services/sendMessage';
 import { getMessages } from '../../services/getMessages';
+import { getChats } from '../../services/getChats';
 
 import * as S from './styles';
 
@@ -26,14 +27,14 @@ const ChatRoom: React.FC<IUser> = ({ user }) => {
     const [messages, setMessages] = useState([] as IMessage[]);
     const [newMessage, setNewMessage] = useState('');
 
-    const handleGetMessages = () => {
-        getMessages().then((data) => {
+    const handleGetMessages = (chatId: string) => {
+        getMessages(chatId).then((data) => {
             setMessages(data);
         });
     };
 
     useEffect(() => {
-        handleGetMessages();
+        handleGetMessages('123');
     }, [newMessage]);
 
     return (
@@ -46,8 +47,14 @@ const ChatRoom: React.FC<IUser> = ({ user }) => {
                 />
                 <S.SendButton
                     onClick={() => {
-                        sendMessage({ text: newMessage, owner: user.uid });
-                        setNewMessage('');
+                        getChats(user.uid).then((chats) => {
+                            sendMessage({
+                                text: newMessage,
+                                owner: user.uid,
+                                chatId: chats[0].id
+                            });
+                            setNewMessage('');
+                        });
                     }}
                 />
             </S.SendArea>
@@ -57,7 +64,7 @@ const ChatRoom: React.FC<IUser> = ({ user }) => {
                         return (
                             <S.OtherWrapper>
                                 <S.OtherMessageContainer>
-                                    <S.OtherMessageText>
+                                    <S.OtherMessageText key={message.id}>
                                         {message.data.text}
                                     </S.OtherMessageText>
                                 </S.OtherMessageContainer>
@@ -66,7 +73,7 @@ const ChatRoom: React.FC<IUser> = ({ user }) => {
                     return (
                         <S.MyWrapper>
                             <S.MyMessageContainer>
-                                <S.MyMessageText>
+                                <S.MyMessageText key={message.id}>
                                     {message.data.text}
                                 </S.MyMessageText>
                             </S.MyMessageContainer>
