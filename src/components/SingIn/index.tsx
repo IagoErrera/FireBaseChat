@@ -9,6 +9,8 @@ import {
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 
+import { createUser } from 'services/createUser';
+
 import * as S from './styles';
 
 interface IUser {
@@ -19,7 +21,10 @@ const SignIn: React.FC<IUser> = ({ setUser }) => {
     const signInWithGoogle = () => {
         const provider = new GoogleAuthProvider();
         const auth = getAuth();
-        signInWithPopup(auth, provider).then((result) => setUser(result.user));
+        signInWithPopup(auth, provider).then((result) => {
+            setUser(result.user);
+            createUser(result.user.uid);
+        });
     };
 
     return (
