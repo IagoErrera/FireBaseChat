@@ -19,23 +19,20 @@ interface IMessage {
     id: string;
 }
 
-interface IUser {
+interface IChatRoom {
     user: User;
+    chatId: string;
 }
 
-const ChatRoom: React.FC<IUser> = ({ user }) => {
+const ChatRoom: React.FC<IChatRoom> = ({ user, chatId }) => {
     const [messages, setMessages] = useState([] as IMessage[]);
     const [newMessage, setNewMessage] = useState('');
 
-    const handleGetMessages = (chatId: string) => {
+    useEffect(() => {
         getMessages(chatId).then((data) => {
             setMessages(data);
         });
-    };
-
-    useEffect(() => {
-        handleGetMessages('123');
-    }, [newMessage]);
+    }, [chatId, newMessage]);
 
     return (
         <S.Wrapper>
