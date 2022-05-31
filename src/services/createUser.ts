@@ -1,7 +1,7 @@
 import { collection, addDoc, query, getDocs, where } from 'firebase/firestore';
 import { db } from '../firebase';
 
-export const createUser = async (id: string) => {
+export const createUser = async (id: string, name: string | null) => {
     const usersRef = collection(db, 'users');
 
     const usersQuery = query(usersRef, where('_id', '==', id));
@@ -16,7 +16,8 @@ export const createUser = async (id: string) => {
 
     if (!exist) {
         await addDoc(usersRef, {
-            _id: id
+            _id: id,
+            name
         });
     }
 };

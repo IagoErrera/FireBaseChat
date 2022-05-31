@@ -8,7 +8,8 @@ export const getUsers = async (): Promise<string[]> => {
     const querySnapshot = await getDocs(chatsRef);
 
     const users: string[] = [];
-    querySnapshot.forEach((user) => users.push(user.id));
+    // eslint-disable-next-line no-underscore-dangle
+    querySnapshot.forEach((user) => users.push(user.data()._id));
 
     return users;
 };
