@@ -10,9 +10,7 @@ import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 
 import { createUser } from 'services/createUser';
-import { getUsers } from 'services/getUsers';
 
-import { createChat } from 'services/createChat';
 import * as S from './styles';
 
 interface IUser {
@@ -25,16 +23,8 @@ const SignIn: React.FC<IUser> = ({ setUser }) => {
         const auth = getAuth();
         signInWithPopup(auth, provider).then((result) => {
             setUser(result.user);
-            createUser(result.user.uid);
+            createUser(result.user.uid, result.user.displayName);
         });
-
-        let users: string[] = [];
-
-        getUsers().then((u: string[]) => {
-            users = u;
-        });
-
-        createChat({ members: users, name: 'Grupo 1' });
     };
 
     return (
