@@ -1,15 +1,27 @@
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, onSnapshot } from 'firebase/firestore';
 
 import { db } from '../firebase';
 
-export const getUsers = async (): Promise<string[]> => {
-    const chatsRef = collection(db, 'users');
+interface IUser {
+    id: string;
+    name: string;
+}
 
-    const querySnapshot = await getDocs(chatsRef);
+interface IConfig {
+    setUsers(data: IUser[]): void;
+}
 
-    const users: string[] = [];
-    // eslint-disable-next-line no-underscore-dangle
-    querySnapshot.forEach((user) => users.push(user.data()._id));
+export const getUsers = async ({ setUsers }: IConfig): Promise<void> => {
+    const usersRef = collection(db, 'users');
 
-    return users;
+    const unsubscribe = onSnapshot(usersRef, (querySnapshot) => {
+        const users: IUser[] = [];
+
+        querySnapshot.forEach((user) =>
+            // eslint-disable-next-line no-underscore-dangle
+            users.push({ id: user.data()._id, name: user.data().name })
+        );
+
+        setUsers(users);
+    });
 };

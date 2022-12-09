@@ -3,6 +3,18 @@ import styled from 'styled-components';
 export const Wrapper = styled.div`
     height: 100%;
     display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+`;
+
+export const ChatListArea = styled.div`
+    height: 100%;
+    width: 30vw;
+`;
+
+export const ChatArea = styled.div`
+    height: 100%;
+    display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
@@ -90,5 +102,14 @@ export const SendArea = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: center;
+`;
+
+export const MoreMessagesButton = styled.button`
+    display: flex;
+    flex-direction: row;
+    background-color: gray;
+    width: 90%;
+    border-radius: 8px;
     justify-content: center;
 `;

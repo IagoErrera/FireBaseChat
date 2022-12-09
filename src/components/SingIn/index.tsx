@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction } from 'react';
+
 import {
     GoogleAuthProvider,
     getAuth,
@@ -6,8 +7,8 @@ import {
     User
 } from 'firebase/auth';
 
-import 'firebase/compat/auth';
-import 'firebase/compat/firestore';
+// import 'firebase/compat/auth';
+// import 'firebase/compat/firestore';
 
 import { createUser } from 'services/createUser';
 
@@ -21,10 +22,15 @@ const SignIn: React.FC<IUser> = ({ setUser }) => {
     const signInWithGoogle = () => {
         const provider = new GoogleAuthProvider();
         const auth = getAuth();
-        signInWithPopup(auth, provider).then((result) => {
-            setUser(result.user);
-            createUser(result.user.uid, result.user.displayName);
-        });
+        signInWithPopup(auth, provider)
+            .then((result) => {
+                // window.addEventListener('message', ({ data }) =>
+                //     console.log(data)
+                // );
+                setUser(result.user);
+                createUser(result.user.uid, result.user.displayName);
+            })
+            .catch(() => null);
     };
 
     return (

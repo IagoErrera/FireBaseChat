@@ -8,13 +8,7 @@ export const createUser = async (id: string, name: string | null) => {
 
     const querySnapshot = await getDocs(usersQuery);
 
-    let exist = false;
-
-    querySnapshot.forEach(() => {
-        exist = true;
-    });
-
-    if (!exist) {
+    if (querySnapshot.empty) {
         await addDoc(usersRef, {
             _id: id,
             name

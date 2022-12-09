@@ -1,4 +1,4 @@
-import { collection, query, getDocs, where } from 'firebase/firestore';
+import { collection, query, where, onSnapshot } from 'firebase/firestore';
 
 import { db } from '../firebase';
 
@@ -7,17 +7,24 @@ interface IChat {
     name: string;
 }
 
-export const getChats = async (id: string) => {
+interface IConfig {
+    id: string;
+    setChats(data: IChat[]): void;
+}
+
+const getChats = async ({ id, setChats }: IConfig) => {
     const chatsRef = collection(db, 'chats');
 
     const chatsQuery = query(chatsRef, where('members', 'array-contains', id));
 
-    const querySnapshot = await getDocs(chatsQuery);
+    const unsubscribe = onSnapshot(chatsQuery, (querySnapshot) => {
+        const chats: IChat[] = [];
+        querySnapshot.forEach((chat) =>
+            chats.push({ id: chat.id, name: chat.data().name })
+        );
 
-    const chats: IChat[] = [];
-    querySnapshot.forEach((chat) =>
-        chats.push({ id: chat.id, name: chat.data().name })
-    );
-
-    return chats;
+        setChats(chats);
+    });
 };
+
+export default getChats;
